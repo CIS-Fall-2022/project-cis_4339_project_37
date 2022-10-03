@@ -1,13 +1,13 @@
-const express = require("express"); 
-const router = express.Router(); 
+const express = require("express");
+const router = express.Router();
 
 //importing data model schemas
-let { primarydata } = require("../models/models"); 
-let { eventdata } = require("../models/models"); 
+let { primarydata } = require("../models/models");
+let { eventdata } = require("../models/models");
 
 //GET all entries
-router.get("/", (req, res, next) => { 
-    primarydata.find( 
+router.get("/", (req, res, next) => {
+    primarydata.find(
         (error, data) => {
             if (error) {
                 return next(error);
@@ -20,8 +20,8 @@ router.get("/", (req, res, next) => {
 
 //GET single entry by ID
 router.get("/id/:id", (req, res, next) => {
-    primarydata.find( 
-        { _id: req.params.id }, 
+    primarydata.find(
+        { _id: req.params.id },
         (error, data) => {
             if (error) {
                 return next(error);
@@ -34,7 +34,7 @@ router.get("/id/:id", (req, res, next) => {
 
 //GET entries based on search query
 //Ex: '...?firstName=Bob&lastName=&searchBy=name' 
-router.get("/search/", (req, res, next) => { 
+router.get("/search/", (req, res, next) => {
     let dbQuery = "";
     if (req.query["searchBy"] === 'name') {
         dbQuery = { firstName: { $regex: `^${req.query["firstName"]}`, $options: "i" }, lastName: { $regex: `^${req.query["lastName"]}`, $options: "i" } }
@@ -43,9 +43,9 @@ router.get("/search/", (req, res, next) => {
             "phoneNumbers.primaryPhone": { $regex: `^${req.query["phoneNumbers.primaryPhone"]}`, $options: "i" }
         }
     };
-    primarydata.find( 
-        dbQuery, 
-        (error, data) => { 
+    primarydata.find(
+        dbQuery,
+        (error, data) => {
             if (error) {
                 return next(error);
             } else {
@@ -56,19 +56,19 @@ router.get("/search/", (req, res, next) => {
 });
 
 //GET events for a single client
-router.get("/events/:id", (req, res, next) => { 
-    
+router.get("/events/:id", (req, res, next) => {
+
 });
 
 //POST
-router.post("/", (req, res, next) => { 
-    primarydata.create( 
+router.post("/", (req, res, next) => {
+    primarydata.create(
         req.body,
-        (error, data) => { 
+        (error, data) => {
             if (error) {
                 return next(error);
             } else {
-                res.json(data); 
+                res.json(data);
             }
         }
     );
@@ -78,9 +78,9 @@ router.post("/", (req, res, next) => {
 });
 
 //PUT update (make sure req body doesn't have the id)
-router.put("/:id", (req, res, next) => { 
-    primarydata.findOneAndUpdate( 
-        { _id: req.params.id }, 
+router.put("/:id", (req, res, next) => {
+    primarydata.findOneAndUpdate(
+        { _id: req.params.id },
         req.body,
         (error, data) => {
             if (error) {
@@ -91,5 +91,24 @@ router.put("/:id", (req, res, next) => {
         }
     );
 });
+
+router.put("/addOrg/:id", (req, res, next) => {
+    console.log(req.body)
+    primarydata.updateOne(
+        { _id: req.params.id },
+        {
+            $push: req.body
+        },
+        (error, data) => {
+            if (error) {
+                return next(error);
+            } else {
+                res.json(data);
+            }
+        }
+    );
+});
+
+
 
 module.exports = router;
