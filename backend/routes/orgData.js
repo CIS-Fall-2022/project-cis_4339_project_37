@@ -106,6 +106,8 @@ router.put("/addEvent/:id", (req, res, next) => {
     );
 });
 
+
+// deletes an org by using the ID of the org
 router.delete("/deleteOrg/:id", (req, res, next) => {
     console.log(req.body)
     orgdata.remove(
