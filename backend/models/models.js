@@ -20,8 +20,12 @@ let primaryDataSchema = new Schema({
         type: String
     },
     phoneNumbers: {
-        type: Array,
-        required: true
+        primaryPhone: {
+            type: String
+        },
+        secondaryPhonePhone: {
+            type: String
+        }
     },
     address: {
         line1: {
@@ -32,14 +36,22 @@ let primaryDataSchema = new Schema({
         },
         city: {
             type: String,
-            required: true
         },
         county: {
+            type: String,
+        },
+        state: {
+            type: String,
+        },
+        country: {
             type: String,
         },
         zip: {
             type: String,
         }
+    },
+    orgs: {
+        type: Array
     }
 }, {
     collection: 'primaryData',
@@ -73,6 +85,12 @@ let eventDataSchema = new Schema({
         county: {
             type: String,
         },
+        state: {
+            type: String,
+        },
+        country: {
+            type: String,
+        },
         zip: {
             type: String,
         }
@@ -87,9 +105,25 @@ let eventDataSchema = new Schema({
     collection: 'eventData'
 });
 
+// collection for orgData
+let orgDataSchema = new Schema({
+    _id: { type: String, default: uuid.v1 },
+    name: {
+        type: String
+    },
+    orgEvents: [String],
+
+}, {
+    collection: 'orgData',
+    timestamps: true
+});
+
+
+
 // create models from mongoose schemas
 const primarydata = mongoose.model('primaryData', primaryDataSchema);
 const eventdata = mongoose.model('eventData', eventDataSchema);
+const orgdata = mongoose.model('orgData', orgDataSchema);
 
 // package the models in an object to export 
-module.exports = { primarydata, eventdata }
+module.exports = { primarydata, eventdata, orgdata }

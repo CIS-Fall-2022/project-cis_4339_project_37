@@ -1,18 +1,7 @@
-# Data Platform Project Setup
+API Documentation
 
-Requirements:
+1. Organization - orgData
 
-This project uses NodeJS and MongoDB.
+2. Client - primaryData
 
-## Backend Node Application
-```
-cd backend
-```
-Follow instructions in backend README
-
-## Frontend Vue 3 Application
-```
-cd frontend
-```
-Follow instructions in frontend README
-
+3. Events - eventData
