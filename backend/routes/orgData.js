@@ -17,7 +17,7 @@ router.get("/", (req, res, next) => {
         }
     ).sort({ 'updatedAt': -1 }).limit(10);
 });
-
+// test
 //GET entries based on search query
 //Ex: '...?firstName=Bob&lastName=&searchBy=name' 
 router.get("/search/", (req, res, next) => {
