@@ -41,6 +41,7 @@ router.get("/search/", (req, res, next) => {
         }
     );
 });
+
 //GET single entry by ID
 router.get("/id/:id", (req, res, next) => {
     orgdata.find(
@@ -87,7 +88,6 @@ router.put("/:id", (req, res, next) => {
         }
     );
 });
-
 
 // PUT updates array by inserting a new eventID
 router.put("/addEvent/:id", (req, res, next) => {
