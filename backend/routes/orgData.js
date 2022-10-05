@@ -18,6 +18,7 @@ router.get("/", (req, res, next) => {
     ).sort({ 'updatedAt': -1 }).limit(10);
 });
 // test
+// test
 //GET entries based on search query
 //Ex: '...?firstName=Bob&lastName=&searchBy=name' 
 router.get("/search/", (req, res, next) => {
@@ -106,10 +107,10 @@ router.put("/addEvent/:id", (req, res, next) => {
     );
 });
 
-
 // deletes an org by using the ID of the org
 router.delete("/deleteOrg/:id", (req, res, next) => {
     console.log(req.body)
+
     orgdata.remove(
         { _id: req.params.id },
         (error, data) => {
@@ -121,5 +122,5 @@ router.delete("/deleteOrg/:id", (req, res, next) => {
         }
     );
 });
-
+//
 module.exports = router;
