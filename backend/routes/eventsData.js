@@ -2,19 +2,49 @@ const express = require("express");
 const router = express.Router();
 
 //importing data model schemas
+// importing both the orgdata and the eventdata in order
+// to grab events from the specific org
 let { eventdata } = require("../models/models");
+let { orgdata } = require("../models/models");
 
-//GET all entries
-router.get("/", (req, res, next) => {
-    eventdata.find(
+
+// this function will be used in the routes in order to pass
+// through the org's information -orgEvents- to return
+function orgInfo(routeFunction) {
+    // grabbing the ORGANIZATION env variable that contains the id of the orgs 
+    // that is running the instance
+    orgdata.find({ "_id": process.env.ORGANIZATION },
         (error, data) => {
             if (error) {
                 return next(error);
             } else {
-                res.json(data);
+                // parses through the data and stores the event array 
+                // containing the events in the event variable
+                let events = data[0].orgEvents;
+                // passes through the event array to the function that is calling it
+                // allowing the function to use the event id that belongs to the speific org
+                routeFunction(events);
             }
         }
     ).sort({ 'updatedAt': -1 }).limit(10);
+}
+
+//GET all events
+router.get("/", (req, res, next) => {
+    orgInfo(orgEventData)
+
+    function orgEventData(eventList) {
+        let event = eventList;
+        eventdata.find({ _id: { $in: event } },
+            (error, data) => {
+                if (error) {
+                    return next(error);
+                } else {
+                    res.json(data);
+                }
+            }
+        ).sort({ 'updatedAt': -1 }).limit(10);
+    };
 });
 
 //GET single entry by ID
@@ -28,8 +58,8 @@ router.get("/id/:id", (req, res, next) => {
     })
 });
 
-//GET entries based on search query
-//Ex: '...?eventName=Food&searchBy=name' 
+// GET entries based on search query
+// Ex: '...?eventName=Food&searchBy=name' 
 router.get("/search/", (req, res, next) => {
     let dbQuery = "";
     if (req.query["searchBy"] === 'name') {
