@@ -28,6 +28,7 @@ function orgInfo(routeFunction) {
         }
     ).sort({ 'updatedAt': -1 }).limit(10);
 }
+// ----------------- GET REQUESTS ------------------
 
 //GET all events
 router.get("/", (req, res, next) => {
@@ -69,31 +70,39 @@ router.get("/id/:id", (req, res, next) => {
 
 // GET entries based on search query
 // Ex: '...?eventName=Food&searchBy=name' 
-router.get("/search/", (req, res, next) => {
-    orgInfo(orgEventDataID)
-    let dbQuery = "";
-    if (req.query["searchBy"] === 'name') {
-        dbQuery = { eventName: { $regex: `^${req.query["eventName"]}`, $options: "i" } }
-    } else if (req.query["searchBy"] === 'date') {
-        dbQuery = {
-            date: req.query["eventDate"]
-        }
-    };
-    eventdata.find(
-        dbQuery,
-        (error, data) => {
-            if (error) {
-                return next(error);
-            } else {
-                res.json(data);
+router.get("/search", (req, res, next) => {
+    orgInfo(searchorgEvent) // runs functions to only use events for the specfic org
+
+    function searchorgEvent(eventList) {
+        let dbQuery = "";
+        // checks if searchBy is name or date
+        if (req.query["searchBy"] === 'name') {
+            // query checks if id is in th eventList then finds the event by its name
+            dbQuery = { _id: { $in: eventList }, eventName: { $regex: `^${req.query["eventName"]}`, $options: "i" } }
+        } else if (req.query["searchBy"] === 'date') {
+            dbQuery = {
+                // checks if event in the event list then if the dates match
+                _id: { $in: eventList }, date: req.query["eventDate"]
             }
-        }
-    );
+        };
+
+        // finds the event based on the query we created above
+        eventdata.find(
+            dbQuery,
+            (error, data) => {
+                if (error) {
+                    return next(error);
+                } else {
+                    res.json(data);
+                }
+            }
+        );
+    };
 });
+
 
 //GET events for which a client is signed up
 router.get("/client/:id", (req, res, next) => {
-    orgInfo(orgEventDataID)
     eventdata.find(
         { attendees: req.params.id },
         (error, data) => {
@@ -106,26 +115,27 @@ router.get("/client/:id", (req, res, next) => {
     );
 });
 
-// dashboard data events for last 2 months and clients
+// GET request that returns the information needed for the dashboard
 router.get("/ptmevents", (req, res, next) => {
-    orgInfo(orgEventDataID)
-    var today = new Date();
-    console.log(today)
-    newDate = new Date(today.getFullYear(), today.getMonth() - 2, 1);
-    console.log(newDate)
-    eventdata.find(
-        { date: { $gte: newDate } }, { eventName: true, attendees: true, date: true },
-        (error, data) => {
-            if (error) {
-                return next(error);
-            } else {
-                res.json(data);
+    orgInfo(orgEventDashboardData)
+    function orgEventDashboardData(eventList) {
+        var today = new Date();
+        newDate = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+        eventdata.find(
+            { _id: { $in: eventList }, date: { $gte: newDate } }, { eventName: true, attendees: true, date: true },
+            (error, data) => {
+                if (error) {
+                    return next(error);
+                } else {
+                    res.json(data);
+                }
             }
-        }
-    ).sort({ 'updatedAt': -1 }).limit(10);
+        ).sort({ 'updatedAt': -1 }).limit(10);
+    };
 });
 
-//POST
+// ------------------- POST REQUESTS ------------------------
+//POST request that adds an event to the collection
 router.post("/", (req, res, next) => {
     eventdata.create(
         req.body,
@@ -139,9 +149,9 @@ router.post("/", (req, res, next) => {
     );
 });
 
-//PUT
+// ------------------ PUT REQUESTS ------------------
+//PUT request that updates an event given the id of th event
 router.put("/:id", (req, res, next) => {
-    orgInfo(orgEventDataID)
     eventdata.findOneAndUpdate(
         { _id: req.params.id },
         req.body,
@@ -155,9 +165,9 @@ router.put("/:id", (req, res, next) => {
     );
 });
 
-//PUT add attendee to event
+//PUT request that adds an attendee to event
+// given the id of th event and the attendees
 router.put("/addAttendee/:id", (req, res, next) => {
-    orgInfo(orgEventDataID)
     //only add attendee if not yet signed uo
     eventdata.find(
         { _id: req.params.id, attendees: req.body.attendee },
@@ -168,10 +178,43 @@ router.put("/addAttendee/:id", (req, res, next) => {
                 if (data.length == 0) {
                     eventdata.updateOne(
                         { _id: req.params.id },
+                        // using $push to add an attendee to the aray
                         { $push: { attendees: req.body.attendee } },
                         (error, data) => {
                             if (error) {
-                                consol
+                                console.log(error);
+                                return next(error);
+                            } else {
+                                res.json(data);
+                            }
+                        }
+                    );
+                }
+
+            }
+        }
+    );
+
+});
+
+// PUT to remove an attendee from an event
+
+router.put("/removeAttendee/:id", (req, res, next) => {
+    //only add attendee if not yet signed uo
+    eventdata.find(
+        { _id: req.params.id, attendees: req.body.attendee },
+        (error, data) => {
+            if (error) {
+                return next(error);
+            } else {
+                if (data.length == 0) {
+                    eventdata.updateOne(
+                        { _id: req.params.id },
+                        // using $pull to remove the attendee from the array
+                        { $pull: { attendees: req.body.attendee } },
+                        (error, data) => {
+                            if (error) {
+                                console.log(error);
                                 return next(error);
                             } else {
                                 res.json(data);
