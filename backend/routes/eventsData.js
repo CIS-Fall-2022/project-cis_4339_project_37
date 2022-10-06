@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 //importing data model schemas
-let { eventdata } = require("../models/models"); 
+let { eventdata } = require("../models/models");
 
 //GET all entries
-router.get("/", (req, res, next) => { 
-    eventdata.find( 
+router.get("/", (req, res, next) => {
+    eventdata.find(
         (error, data) => {
             if (error) {
                 return next(error);
@@ -18,7 +18,7 @@ router.get("/", (req, res, next) => {
 });
 
 //GET single entry by ID
-router.get("/id/:id", (req, res, next) => { 
+router.get("/id/:id", (req, res, next) => {
     eventdata.find({ _id: req.params.id }, (error, data) => {
         if (error) {
             return next(error)
@@ -30,18 +30,18 @@ router.get("/id/:id", (req, res, next) => {
 
 //GET entries based on search query
 //Ex: '...?eventName=Food&searchBy=name' 
-router.get("/search/", (req, res, next) => { 
+router.get("/search/", (req, res, next) => {
     let dbQuery = "";
     if (req.query["searchBy"] === 'name') {
         dbQuery = { eventName: { $regex: `^${req.query["eventName"]}`, $options: "i" } }
     } else if (req.query["searchBy"] === 'date') {
         dbQuery = {
-            date:  req.query["eventDate"]
+            date: req.query["eventDate"]
         }
     };
-    eventdata.find( 
-        dbQuery, 
-        (error, data) => { 
+    eventdata.find(
+        dbQuery,
+        (error, data) => {
             if (error) {
                 return next(error);
             } else {
@@ -52,10 +52,10 @@ router.get("/search/", (req, res, next) => {
 });
 
 //GET events for which a client is signed up
-router.get("/client/:id", (req, res, next) => { 
-    eventdata.find( 
-        { attendees: req.params.id }, 
-        (error, data) => { 
+router.get("/client/:id", (req, res, next) => {
+    eventdata.find(
+        { attendees: req.params.id },
+        (error, data) => {
             if (error) {
                 return next(error);
             } else {
@@ -65,11 +65,29 @@ router.get("/client/:id", (req, res, next) => {
     );
 });
 
+// dashboard data events for last 2 months and clients
+router.get("/ptmevents", (req, res, next) => {
+    var today = new Date();
+    console.log(today)
+    newDate = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+    console.log(newDate)
+    eventdata.find(
+        { date: { $gte: newDate } }, { eventName: true, attendees: true, date: true },
+        (error, data) => {
+            if (error) {
+                return next(error);
+            } else {
+                res.json(data);
+            }
+        }
+    ).sort({ 'updatedAt': -1 }).limit(10);
+});
+
 //POST
-router.post("/", (req, res, next) => { 
-    eventdata.create( 
-        req.body, 
-        (error, data) => { 
+router.post("/", (req, res, next) => {
+    eventdata.create(
+        req.body,
+        (error, data) => {
             if (error) {
                 return next(error);
             } else {
@@ -97,15 +115,15 @@ router.put("/:id", (req, res, next) => {
 //PUT add attendee to event
 router.put("/addAttendee/:id", (req, res, next) => {
     //only add attendee if not yet signed uo
-    eventdata.find( 
-        { _id: req.params.id, attendees: req.body.attendee }, 
-        (error, data) => { 
+    eventdata.find(
+        { _id: req.params.id, attendees: req.body.attendee },
+        (error, data) => {
             if (error) {
                 return next(error);
             } else {
                 if (data.length == 0) {
                     eventdata.updateOne(
-                        { _id: req.params.id }, 
+                        { _id: req.params.id },
                         { $push: { attendees: req.body.attendee } },
                         (error, data) => {
                             if (error) {
@@ -117,11 +135,11 @@ router.put("/addAttendee/:id", (req, res, next) => {
                         }
                     );
                 }
-                
+
             }
         }
     );
-    
+
 });
 
 //DELETE an Event by using the ID
@@ -129,15 +147,15 @@ router.delete("/deleteEvent/:id", (req, res, next) => {
     eventdata.findOneAndRemove(
         { _id: req.params.id },
         (error, data) => {
-        if (error) {
-            return next(error);
-        } else {
-            res.status(200).json({
-                msg: data
-            });
-            res.send('Event is deleted');
-        }
-    });
+            if (error) {
+                return next(error);
+            } else {
+                res.status(200).json({
+                    msg: data
+                });
+                res.send('Event is deleted');
+            }
+        });
 });
 
 
