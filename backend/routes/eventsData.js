@@ -54,18 +54,23 @@ router.get("/", (req, res, next) => {
 
 //GET single entry by ID
 router.get("/id/:id", (req, res, next) => {
-    eventdata.find({ _id: req.params.id }, (error, data) => {
-        if (error) {
-            return next(error)
-        } else {
-            res.json(data)
-        }
-    })
+    orgInfo(orgEventDataID)
+
+    function orgEventDataID(eventList) {
+        eventdata.find({ _id: req.params.id }, (error, data) => {
+            if (error) {
+                return next(error)
+            } else {
+                res.json(data)
+            }
+        })
+    };
 });
 
 // GET entries based on search query
 // Ex: '...?eventName=Food&searchBy=name' 
 router.get("/search/", (req, res, next) => {
+    orgInfo(orgEventDataID)
     let dbQuery = "";
     if (req.query["searchBy"] === 'name') {
         dbQuery = { eventName: { $regex: `^${req.query["eventName"]}`, $options: "i" } }
@@ -88,6 +93,7 @@ router.get("/search/", (req, res, next) => {
 
 //GET events for which a client is signed up
 router.get("/client/:id", (req, res, next) => {
+    orgInfo(orgEventDataID)
     eventdata.find(
         { attendees: req.params.id },
         (error, data) => {
@@ -102,6 +108,7 @@ router.get("/client/:id", (req, res, next) => {
 
 // dashboard data events for last 2 months and clients
 router.get("/ptmevents", (req, res, next) => {
+    orgInfo(orgEventDataID)
     var today = new Date();
     console.log(today)
     newDate = new Date(today.getFullYear(), today.getMonth() - 2, 1);
@@ -134,6 +141,7 @@ router.post("/", (req, res, next) => {
 
 //PUT
 router.put("/:id", (req, res, next) => {
+    orgInfo(orgEventDataID)
     eventdata.findOneAndUpdate(
         { _id: req.params.id },
         req.body,
@@ -149,6 +157,7 @@ router.put("/:id", (req, res, next) => {
 
 //PUT add attendee to event
 router.put("/addAttendee/:id", (req, res, next) => {
+    orgInfo(orgEventDataID)
     //only add attendee if not yet signed uo
     eventdata.find(
         { _id: req.params.id, attendees: req.body.attendee },
@@ -179,6 +188,7 @@ router.put("/addAttendee/:id", (req, res, next) => {
 
 //DELETE an Event by using the ID
 router.delete("/deleteEvent/:id", (req, res, next) => {
+    orgInfo(orgEventDataID)
     eventdata.findOneAndRemove(
         { _id: req.params.id },
         (error, data) => {
