@@ -32,6 +32,12 @@ router.get("/id/:id", (req, res, next) => {
     );
 });
 
+
+
+
+
+
+
 //GET entries based on search query
 //Ex: '...?firstName=Bob&lastName=&searchBy=name' 
 router.get("/search/", (req, res, next) => {
