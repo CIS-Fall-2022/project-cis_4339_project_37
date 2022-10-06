@@ -7,6 +7,11 @@ const router = express.Router();
 let { eventdata } = require("../models/models");
 let { orgdata } = require("../models/models");
 
+// IMPORTANT - "/" route will only return the events that are apart of the organization
+// that is running the instance. So depending on id that is stored in the .env file ex: ORGANIZATION = 'XXXXXXXXX-452e-11ed-a044-27e6ab98a1a8'
+// some routes will only return specifically for that org
+
+
 // this function will be used in the routes in order to pass
 // through the org's information -orgEvents- to return
 function orgInfo(routeFunction) {
@@ -200,29 +205,26 @@ router.put("/removeAttendee/:id", (req, res, next) => {
             if (error) {
                 return next(error);
             } else {
-                if (data.length == 0) {
-                    eventdata.updateOne(
-                        { _id: req.params.id },
-                        // using $pull to remove the attendee from the array
-                        { $pull: { attendees: req.body.attendee } },
-                        (error, data) => {
-                            if (error) {
-                                console.log(error);
-                                return next(error);
-                            } else {
-                                res.json(data);
-                            }
+                eventdata.updateOne(
+                    { _id: req.params.id },
+                    // using $pull to remove the attendee from the array
+                    { $pull: { attendees: req.body.attendee } },
+                    (error, data) => {
+                        if (error) {
+                            console.log(error);
+                            return next(error);
+                        } else {
+                            res.json(data);
                         }
-                    );
-                }
-
+                    }
+                );
             }
         }
     );
 
 });
-
-//DELETE an Event by using the ID
+//------------------ DELETE Requests ------------------------------
+//DELETE request to remove an Event by using the ID of the client
 router.delete("/deleteEvent/:id", (req, res, next) => {
     eventdata.findOneAndRemove(
         { _id: req.params.id },

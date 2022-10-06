@@ -2,7 +2,8 @@ const uuid = require('uuid');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-//collection for intakeData
+// collection for the primaryData schemma which will store clients
+// information
 let primaryDataSchema = new Schema({
     _id: { type: String, default: uuid.v1 },
     firstName: {
@@ -19,6 +20,7 @@ let primaryDataSchema = new Schema({
     email: {
         type: String
     },
+    // removed the array part and just made the phones an object
     phoneNumbers: {
         primaryPhone: {
             type: String
@@ -27,6 +29,8 @@ let primaryDataSchema = new Schema({
             type: String
         }
     },
+    // added state and country in order to better identify
+    // the location
     address: {
         line1: {
             type: String
@@ -58,7 +62,7 @@ let primaryDataSchema = new Schema({
     timestamps: true
 });
 
-//collection for eventData
+// collection for eventData schema that will store the events
 let eventDataSchema = new Schema({
     _id: { type: String, default: uuid.v1 },
     eventName: {
@@ -72,6 +76,9 @@ let eventDataSchema = new Schema({
         type: Date,
         required: true
     },
+    // added state and country attr in order to 
+    // better identify the location that the event
+    // is being taken place
     address: {
         line1: {
             type: String
@@ -105,14 +112,15 @@ let eventDataSchema = new Schema({
     collection: 'eventData'
 });
 
-// collection for orgData
+// collection for orgData schema that will store
+// information about the organization that will be using the application
 let orgDataSchema = new Schema({
     _id: { type: String, default: uuid.v1 },
     name: {
         type: String
     },
+    // orgEvents stores the id of the events that are associated with the organization
     orgEvents: [String],
-
 }, {
     collection: 'orgData',
     timestamps: true
