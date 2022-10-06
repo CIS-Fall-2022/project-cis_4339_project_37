@@ -31,10 +31,14 @@ function orgInfo(routeFunction) {
 
 //GET all events
 router.get("/", (req, res, next) => {
+
     orgInfo(orgEventData)
 
+    // function to find all eventdata for the org
     function orgEventData(eventList) {
         let event = eventList;
+        // using $in in order to find any events that are in the event array, which comes from the orgInfo function
+        // this array will only contain event id's for that are assigned to instance org
         eventdata.find({ _id: { $in: event } },
             (error, data) => {
                 if (error) {
@@ -46,6 +50,7 @@ router.get("/", (req, res, next) => {
         ).sort({ 'updatedAt': -1 }).limit(10);
     };
 });
+
 
 //GET single entry by ID
 router.get("/id/:id", (req, res, next) => {
