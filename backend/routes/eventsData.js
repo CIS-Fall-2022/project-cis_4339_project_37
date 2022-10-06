@@ -7,7 +7,6 @@ const router = express.Router();
 let { eventdata } = require("../models/models");
 let { orgdata } = require("../models/models");
 
-
 // this function will be used in the routes in order to pass
 // through the org's information -orgEvents- to return
 function orgInfo(routeFunction) {
@@ -29,12 +28,9 @@ function orgInfo(routeFunction) {
     ).sort({ 'updatedAt': -1 }).limit(10);
 }
 // ----------------- GET REQUESTS ------------------
-
-//GET all events
+//GET all events that belong to the organization 
 router.get("/", (req, res, next) => {
-
     orgInfo(orgEventData)
-
     // function to find all eventdata for the org
     function orgEventData(eventList) {
         let event = eventList;
@@ -52,11 +48,9 @@ router.get("/", (req, res, next) => {
     };
 });
 
-
 //GET single entry by ID
 router.get("/id/:id", (req, res, next) => {
     orgInfo(orgEventDataID)
-
     function orgEventDataID(eventList) {
         eventdata.find({ _id: req.params.id }, (error, data) => {
             if (error) {
@@ -198,7 +192,6 @@ router.put("/addAttendee/:id", (req, res, next) => {
 });
 
 // PUT to remove an attendee from an event
-
 router.put("/removeAttendee/:id", (req, res, next) => {
     //only add attendee if not yet signed uo
     eventdata.find(
@@ -231,7 +224,6 @@ router.put("/removeAttendee/:id", (req, res, next) => {
 
 //DELETE an Event by using the ID
 router.delete("/deleteEvent/:id", (req, res, next) => {
-    orgInfo(orgEventDataID)
     eventdata.findOneAndRemove(
         { _id: req.params.id },
         (error, data) => {
