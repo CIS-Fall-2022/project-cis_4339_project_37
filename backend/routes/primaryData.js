@@ -109,6 +109,21 @@ router.put("/addOrg/:id", (req, res, next) => {
     );
 });
 
+// Deletes a client based on their id
+router.delete("/deletePrimary/:id", (req, res, next) => {
+    console.log(req.body)
+    primarydata.remove(
+        { _id: req.params.id },
+        (error, data) => {
+            if (error) {
+                return next(error);
+            } else {
+                res.json(data);
+            }
+        }
+    );
+});
+
 
 
 module.exports = router;
