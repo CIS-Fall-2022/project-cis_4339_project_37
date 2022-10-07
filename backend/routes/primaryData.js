@@ -84,7 +84,7 @@ router.post("/", (req, res, next) => {
 // ------------------ PUT Requests --------------------------------
 
 //PUT request to update the attributes for the client using the id of the client
-router.put("/:id", (req, res, next) => {
+router.put("/updateClient/:id", (req, res, next) => {
     primarydata.findOneAndUpdate(
         { _id: req.params.id },
         req.body,
@@ -100,11 +100,11 @@ router.put("/:id", (req, res, next) => {
 
 
 // PUT request to add an org to client
-router.put("/addOrg/:id", (req, res, next) => {
+router.put("/addOrg/", (req, res, next) => {
     // use org ID from .env file of that org's instance
     orgID = process.env.ORGANIZATION
     primarydata.updateOne(
-        { _id: req.params.id },
+        { _id: req.body._id },
         // $push to insert the id into the org array
         {
             $push: { orgs: orgID }
@@ -120,13 +120,13 @@ router.put("/addOrg/:id", (req, res, next) => {
 });
 
 
-// removes org to a client in order to associate them
-router.put("/removeOrg/:id", (req, res, next) => {
+// PUT request to remove org from a client
+router.put("/removeOrg/", (req, res, next) => {
     //contains the ID of the organization that is running this instance
     orgID = process.env.ORGANIZATION
     primarydata.updateOne(
         // finds the user
-        { _id: req.params.id },
+        { _id: req.body._id },
         // pulls org from the array that contains org ids 
         {
             $pull: { orgs: orgID }
@@ -143,10 +143,10 @@ router.put("/removeOrg/:id", (req, res, next) => {
 
 // ------------- DELETE Requests ----------------------------
 // Deletes a client based on their id
-router.delete("/deletePrimary/:id", (req, res, next) => {
+router.delete("/deletePrimary/", (req, res, next) => {
     console.log(req.body)
     primarydata.remove(
-        { _id: req.params.id },
+        { _id: req.body._id },
         (error, data) => {
             if (error) {
                 return next(error);

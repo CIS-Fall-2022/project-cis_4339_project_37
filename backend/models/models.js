@@ -25,7 +25,7 @@ let primaryDataSchema = new Schema({
         primaryPhone: {
             type: String
         },
-        secondaryPhonePhone: {
+        secondaryPhone: {
             type: String
         }
     },

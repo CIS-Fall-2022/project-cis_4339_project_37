@@ -66,10 +66,10 @@ router.post("/", (req, res, next) => {
 });
 
 // PUT requests updates the org events array by inserting a new eventID
-router.put("/addEvent/:id", (req, res, next) => {
+router.put("/addEvent/", (req, res, next) => {
     console.log(req.body)
     orgdata.updateOne(
-        { _id: req.params.id },
+        { _id: process.env.ORGANIZATION },
         {
             // push used to add an id to the array
             $push: req.body
@@ -85,10 +85,10 @@ router.put("/addEvent/:id", (req, res, next) => {
 });
 
 // PUT requests updates the org events array by removing a new eventID
-router.put("/addEvent/:id", (req, res, next) => {
+router.put("/removeEvent/", (req, res, next) => {
     console.log(req.body)
     orgdata.updateOne(
-        { _id: req.params.id },
+        { _id: process.env.ORGANIZATION },
         {
             // pull used to remove an id from the array
             $pull: req.body
@@ -104,11 +104,11 @@ router.put("/addEvent/:id", (req, res, next) => {
 });
 
 // deletes an org by using the ID of the org
-router.delete("/deleteOrg/:id", (req, res, next) => {
+router.delete("/deleteOrg/", (req, res, next) => {
     console.log(req.body)
 
     orgdata.remove(
-        { _id: req.params.id },
+        { _id: req.body._id },
         (error, data) => {
             if (error) {
                 return next(error);

@@ -221,10 +221,10 @@ router.put("/removeAttendee/:id", (req, res, next) => {
             }
         }
     );
-
 });
+
 //------------------ DELETE Requests ------------------------------
-//DELETE request to remove an Event by using the ID of the client
+//DELETE request to remove an Event by using the ID of the event
 router.delete("/deleteEvent/:id", (req, res, next) => {
     eventdata.findOneAndRemove(
         { _id: req.params.id },
