@@ -1,6 +1,7 @@
 API Documentation
 
 Environment Variables Setup:
+
     Requires two variables in the .env file
         - MONGO_URL = (INSERT MONGO_URL)
             ex: MONGO_URL = 'mongodb+srv://exampleProject37:examplePass@example37.eylorqc.mongodb.net/examplemain-db'
