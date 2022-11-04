@@ -114,6 +114,7 @@ router.get("/client/:id", (req, res, next) => {
     );
 });
 
+
 // GET request that returns the information needed for the dashboard
 router.get("/ptmevents", (req, res, next) => {
     orgInfo(orgEventDashboardData)
@@ -126,6 +127,9 @@ router.get("/ptmevents", (req, res, next) => {
                 if (error) {
                     return next(error);
                 } else {
+                    console.log(data.length)
+                    let eventsLen = { numOfEvents: data.length }
+                    data.push(eventsLen)
                     res.json(data);
                 }
             }

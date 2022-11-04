@@ -143,6 +143,7 @@ router.put("/removeOrg/", (req, res, next) => {
 
 // ------------- DELETE Requests ----------------------------
 // Deletes a client based on their id
+// will also remove the client from the 
 router.delete("/deletePrimary/", (req, res, next) => {
     console.log(req.body)
     primarydata.remove(
@@ -151,10 +152,29 @@ router.delete("/deletePrimary/", (req, res, next) => {
             if (error) {
                 return next(error);
             } else {
+                removeFromEvents()
                 res.json(data);
             }
         }
     );
+
+    function removeFromEvents() {
+        eventdata.updateMany(
+            { attendees: req.body._id },
+            {
+                $pull: { attendees: req.body._id }
+            }, (error, data) => {
+                if (error) {
+                    return next(error);
+                }
+                else {
+                    res.json(data);
+                }
+            }
+        );
+    }
+
+
 });
 
 
