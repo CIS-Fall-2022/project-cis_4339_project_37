@@ -66,12 +66,16 @@ router.get("/search/", (req, res, next) => {
 // ----------- POST request --------------------
 //POST request to insert a client into the db
 router.post("/", (req, res, next) => {
+    req.body.orgs = process.env.ORGANIZATION
+    console.log(req.body)
+
     primarydata.create(
         req.body,
         (error, data) => {
             if (error) {
                 return next(error);
             } else {
+
                 res.json(data);
             }
         }
@@ -79,12 +83,15 @@ router.post("/", (req, res, next) => {
     primarydata.createdAt;
     primarydata.updatedAt;
     primarydata.createdAt instanceof Date;
+
+
 });
 
 // ------------------ PUT Requests --------------------------------
 
 //PUT request to update the attributes for the client using the id of the client
 router.put("/updateClient/:id", (req, res, next) => {
+    console.log(req.body)
     primarydata.findOneAndUpdate(
         { _id: req.params.id },
         req.body,

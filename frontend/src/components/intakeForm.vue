@@ -26,7 +26,6 @@ export default {
           city: "",
           county: "",
           state: "",
-          country: "",
           zip: "",
         },
       },
@@ -59,7 +58,6 @@ export default {
                 city: "",
                 county: "",
                 state: "",
-                country: "",
                 zip: "",
               },
             };
@@ -79,9 +77,11 @@ export default {
         email: { email },
         address: {
           city: { required },
+          state: {required},
         },
         phoneNumbers: {
           primaryPhone: { required, numeric },
+          secondaryPhone: {numeric},
         },
       },
     };
@@ -277,6 +277,13 @@ export default {
                 pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
                 v-model="client.phoneNumbers.secondaryPhone"
               />
+              <p
+                  class="text-red-700"
+                  v-for="error of v$.client.phoneNumbers.secondaryPhone.$errors"
+                  :key="error.$uid"
+                >
+                  {{ error.$message }}!
+                </p>
             </label>
           </div>
         </div>
@@ -401,6 +408,38 @@ export default {
                 "
                 v-model="client.address.zip"
               />
+            </label>
+          </div>
+      
+       
+          <!-- form field -->
+          <div class="flex flex-col">
+            <label class="block">
+              <span class="text-gray-700">State</span>
+              <span style="color: #ff0000">*</span>
+              <input
+                type="text"
+                class="
+                  w-full
+                  rounded-md
+                  border-gray-300
+                  shadow-sm
+                  focus:border-indigo-300
+                  focus:ring
+                  focus:ring-indigo-200
+                  focus:ring-opacity-50
+                "
+                v-model="client.address.state"
+              />
+              <span class="text-black" v-if="v$.client.address.state.$error">
+                <p
+                  class="text-red-700"
+                  v-for="error of v$.client.address.$errors"
+                  :key="error.$uid"
+                >
+                  {{ error.$message }}!
+                </p>
+              </span>
             </label>
           </div>
           <div></div>
