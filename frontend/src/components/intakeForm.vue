@@ -95,7 +95,7 @@ export default {
     >
       Client Intake Form
     </h1>
-    <div class="px-10 py-20">
+    <div class="px-10 py-8">
       <!-- @submit.prevent stops the submit event from reloading the page-->
       <form @submit.prevent="handleSubmitForm">
         <!-- grid container -->
@@ -104,7 +104,7 @@ export default {
             grid grid-cols-1
             sm:grid-cols-2
             md:grid-cols-4
-            gap-x-6 gap-y-10
+            gap-x-6 gap-y-2
           "
         >
           <h2 class="text-2xl font-bold">Personal Details</h2>
@@ -295,7 +295,7 @@ export default {
             grid grid-cols-1
             sm:grid-cols-2
             md:grid-cols-4
-            gap-x-6 gap-y-10
+            gap-x-6 gap-y-2
           "
         >
           <h2 class="text-2xl font-bold">Address Details</h2>
@@ -361,7 +361,7 @@ export default {
               <span class="text-black" v-if="v$.client.address.city.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.address.$errors"
+                  v-for="error of v$.client.address.city.$errors"
                   :key="error.$uid"
                 >
                   {{ error.$message }}!
@@ -434,7 +434,7 @@ export default {
               <span class="text-black" v-if="v$.client.address.state.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.address.$errors"
+                  v-for="error of v$.client.address.state.$errors"
                   :key="error.$uid"
                 >
                   {{ error.$message }}!

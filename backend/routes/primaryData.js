@@ -28,8 +28,9 @@ router.get("/", (req, res, next) => {
 
 //GET request that retrives single entry by using the ID of the client
 router.get("/id/:id", (req, res, next) => {
+    orgID = process.env.ORGANIZATION
     primarydata.find(
-        { _id: req.params.id },
+        { _id: req.params.id, orgs: orgID },
         (error, data) => {
             if (error) {
                 return next(error);
@@ -44,10 +45,11 @@ router.get("/id/:id", (req, res, next) => {
 //Ex: '...?firstName=Bob&lastName=&searchBy=name' 
 router.get("/search/", (req, res, next) => {
     let dbQuery = "";
+    orgID = process.env.ORGANIZATION
     if (req.query["searchBy"] === 'name') {
-        dbQuery = { firstName: { $regex: `^${req.query["firstName"]}`, $options: "i" }, lastName: { $regex: `^${req.query["lastName"]}`, $options: "i" } }
+        dbQuery = { orgs: orgID,firstName: { $regex: `^${req.query["firstName"]}`, $options: "i" }, lastName: { $regex: `^${req.query["lastName"]}`, $options: "i" } }
     } else if (req.query["searchBy"] === 'number') {
-        dbQuery = {
+        dbQuery = { orgs: orgID,
             "phoneNumbers.primaryPhone": { $regex: `^${req.query["phoneNumbers.primaryPhone"]}`, $options: "i" }
         }
     };

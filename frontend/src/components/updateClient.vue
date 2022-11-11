@@ -1,6 +1,6 @@
 <script>
 import useVuelidate from "@vuelidate/core";
-import { required, email, alpha, numeric } from "@vuelidate/validators";
+import { required, email, alpha, numeric, maxLength,minLength } from "@vuelidate/validators";
 import VueMultiselect from "vue-multiselect";
 import axios from "axios";
 import { DateTime } from "luxon";
@@ -23,17 +23,17 @@ export default {
         middleName: "",
         lastName: "",
         email: "",
-        phoneNumbers: [
+        phoneNumbers: 
           {
             primaryPhone: "",
             secondaryPhone: "",
           },
-        ],
         address: {
           line1: "",
           line2: "",
           city: "",
           county: "",
+          state: "",
           zip: "",
         },
       },
@@ -52,18 +52,20 @@ export default {
       )
       .then((resp) => {
         let data = resp.data[0];
+        console.log(data)
         this.client.firstName = data.firstName;
         this.client.middleName = data.middleName;
         this.client.lastName = data.lastName;
         this.client.email = data.email;
-        this.client.phoneNumbers[0].primaryPhone =
-          data.phoneNumbers[0].primaryPhone;
-        this.client.phoneNumbers[0].secondaryPhone =
-          data.phoneNumbers[0].secondaryPhone;
+        this.client.phoneNumbers.primaryPhone =
+          data.phoneNumbers.primaryPhone;
+        this.client.phoneNumbers.secondaryPhone =
+          data.phoneNumbers.secondaryPhone;
         this.client.address.line1 = data.address.line1;
         this.client.address.line2 = data.address.line2;
         this.client.address.city = data.address.city;
         this.client.address.county = data.address.county;
+        this.client.address.state = data.address.state;
         this.client.address.zip = data.address.zip;
       });
     axios
@@ -95,16 +97,24 @@ export default {
     formattedDate(datetimeDB) {
       return DateTime.fromISO(datetimeDB).plus({ days: 1 }).toLocaleString();
     },
-    handleClientUpdate() {
-      let apiURL = import.meta.env.VITE_ROOT_API + `/primarydata/${this.id}`;
+    async handleClientUpdate() {
+      console.log(this.v$.client.phoneNumbers.primaryPhone.$error)
+      const isFormCorrect = await this.v$.$validate();
+      if (isFormCorrect) {
+      let apiURL = import.meta.env.VITE_ROOT_API + `/primarydata/updateClient/${this.id}`;
       axios.put(apiURL, this.client).then(() => {
         alert("Update has been saved.");
         this.$router.back().catch((error) => {
           console.log(error);
         });
-      });
+      }).catch((error) => {
+            console.log(error);
+          });
+    }
     },
-    addToEvent() {
+    async addToEvent() {
+      const isFormCorrect = await this.v$.$validate();
+      if (isFormCorrect) {
       this.eventsChosen.forEach((event) => {
         let apiURL =
           import.meta.env.VITE_ROOT_API + `/eventdata/addAttendee/` + event._id;
@@ -125,6 +135,7 @@ export default {
             });
         });
       });
+    }
     },
   },
   validations() {
@@ -133,11 +144,11 @@ export default {
         firstName: { required, alpha },
         lastName: { required, alpha },
         email: { email },
-        phoneNumbers: [
+        phoneNumbers: 
           {
-            primaryPhone: { required, numeric },
+            primaryPhone: { required, numeric, maxLength: maxLength(10), minLength: minLength(10) },
+            secondaryPhone: {numeric,maxLength: maxLength(10), minLength: minLength(10) },
           },
-        ],
       },
     };
   },
@@ -150,7 +161,7 @@ export default {
       <!-- @submit.prevent stops the submit event from reloading the page-->
       <form @submit.prevent="handleSubmitForm">
         <!-- grid container -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5">
           <h2 class="text-2xl font-bold">Personal Details</h2>
           <!-- form field -->
           <div class="flex flex-col">
@@ -235,12 +246,12 @@ export default {
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
-                v-model="client.phoneNumbers[0].primaryPhone"
+                v-model="client.phoneNumbers.primaryPhone"
               />
-              <span class="text-black" v-if="v$.client.phoneNumbers[0].primaryPhone.$error">
+              <span class="text-black" v-if="v$.client.phoneNumbers.primaryPhone.$error">
                 <p
                   class="text-red-700"
-                  v-for="error of v$.client.phoneNumbers[0].primaryPhone.$errors"
+                  v-for="error of v$.client.phoneNumbers.primaryPhone.$errors"
                   :key="error.$uid"
                 >{{ error.$message }}!</p>
               </span>
@@ -254,14 +265,14 @@ export default {
                 type="text"
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 pattern="[0-9]{3}[0-9]{3}[0-9]{4}"
-                v-model="client.phoneNumbers[0].secondaryPhone"
+                v-model="client.phoneNumbers.secondaryPhone"
               />
             </label>
           </div>
         </div>
 
         <!-- grid container -->
-        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
+        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-5">
           <h2 class="text-2xl font-bold">Address Details</h2>
           <!-- form field -->
           <div class="flex flex-col">
@@ -320,11 +331,23 @@ export default {
               />
             </label>
           </div>
+            <!-- form field -->
+                    <div class="flex flex-col">
+            <label class="block">
+              <span class="text-gray-700">State</span>
+              <input
+                type="text"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="client.address.state"
+              />
+            </label>
+          </div>
           <div></div>
         </div>
-
+        <div></div>
         <!-- grid container -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
+          <div></div>
           <div class="flex justify-between mt-10 mr-20">
             <button
               @click="handleClientUpdate"
@@ -332,6 +355,7 @@ export default {
               class="bg-red-700 text-white rounded"
             >Update Client</button>
           </div>
+       
           <div class="flex justify-between mt-10 mr-20">
             <button
               type="reset"
