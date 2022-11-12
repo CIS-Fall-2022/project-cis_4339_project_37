@@ -140,16 +140,38 @@ router.get("/ptmevents", (req, res, next) => {
 // ------------------- POST REQUESTS ------------------------
 //POST request that adds an event to the collection
 router.post("/", (req, res, next) => {
+    req.body.orgs = process.env.ORGANIZATION
+    console.log(req.body)
     eventdata.create(
         req.body,
         (error, data) => {
             if (error) {
                 return next(error);
             } else {
+                console.log(data)
+                addEventToOrg(data._id)
                 res.json(data);
             }
         }
     );
+    function addEventToOrg(id) {
+        orgdata.updateOne(
+            { _id: process.env.ORGANIZATION },
+            {
+                // push used to add an id to the array
+                $push: {orgEvents : id}
+            },
+            (error, data) => {
+                if (error) {
+                    console.log('testing check')
+                    return next(error);
+                } else {
+                    console.log('testing check')
+                 
+                }
+            }
+        );
+    }
 });
 
 // ------------------ PUT REQUESTS ------------------
