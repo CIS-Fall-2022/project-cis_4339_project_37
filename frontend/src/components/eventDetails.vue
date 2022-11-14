@@ -185,10 +185,23 @@
               />
             </label>
           </div>
+                    <!-- form field -->
+                    <div class="flex flex-col">
+            <label class="block">
+              <span class="text-gray-700">State</span>
+              <input
+                type="text"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                placeholder
+                v-model="event.address.state"
+              />
+            </label>
+          </div>
         </div>
-
+       
         <!-- grid container -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
+          <div></div>
           <div class="flex justify-between mt-10 mr-20">
             <button
               @click="handleEventUpdate"

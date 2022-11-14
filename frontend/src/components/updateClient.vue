@@ -114,7 +114,26 @@ export default {
     },
     async addToEvent() {
       const isFormCorrect = await this.v$.$validate();
-      if (isFormCorrect) {
+      var curClientEvents = JSON.parse(JSON.stringify(this.clientEvents))
+      var stringEventsChoosen = JSON.parse(JSON.stringify(this.eventsChosen))
+      var eventsList = []
+      var error = true
+      stringEventsChoosen.forEach(choosen => {
+        eventsList.push(choosen.eventName)
+      })
+      curClientEvents.forEach(events => {
+        if (eventsList.includes(events.eventName)){
+          error = false
+        }
+      })
+      if (error){
+        console.log("no copies in events added")
+      }
+      else {
+        alert("Please Remove Duplicate Event from selection");
+      }
+      console.log(JSON.parse(JSON.stringify(this.clientEvents)))
+      if (isFormCorrect && error) {
       this.eventsChosen.forEach((event) => {
         let apiURL =
           import.meta.env.VITE_ROOT_API + `/eventdata/addAttendee/` + event._id;
