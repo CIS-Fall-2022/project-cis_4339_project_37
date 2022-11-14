@@ -47,9 +47,6 @@ let primaryDataSchema = new Schema({
         state: {
             type: String,
         },
-        country: {
-            type: String,
-        },
         zip: {
             type: String,
         }
@@ -93,9 +90,6 @@ let eventDataSchema = new Schema({
             type: String,
         },
         state: {
-            type: String,
-        },
-        country: {
             type: String,
         },
         zip: {

@@ -32,6 +32,7 @@
             "
             v-model="searchBy"
           >
+            <option value="" disabled selected>Select your option</option>
             <option value="Client Name">Client Name</option>
             <option value="Client Number">Client Number</option>
           </select>
@@ -100,7 +101,7 @@
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
       >
         <div></div>
-        <div></div>
+   
         <div class="mt-5 grid-cols-2">
           <button
             class="mr-10 border border-red-700 bg-white text-red-700 rounded"

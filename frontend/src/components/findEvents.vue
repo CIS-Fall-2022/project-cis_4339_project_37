@@ -21,6 +21,7 @@
         <!-- Displays Client Name search field -->
         <div class="flex flex-col">
           <select
+            
             class="
               rounded-md
               border-gray-300
@@ -32,6 +33,7 @@
             "
             v-model="searchBy"
           >
+            <option value="" disabled selected>Select your option</option>
             <option value="Event Name">Event Name</option>
             <option value="Event Date">Event Date</option>
           </select>
@@ -59,6 +61,7 @@
         <!-- Displays event date search field -->
         <div class="flex flex-col" v-if="searchBy === 'Event Date'">
           <input
+          placeholder="Test"
             class="
               w-full
               rounded-md
@@ -79,8 +82,9 @@
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
       >
         <div></div>
-        <div></div>
+   
         <div class="mt-5 grid-cols-2">
+         
           <button
             class="mr-10 border border-red-700 bg-white text-red-700 rounded"
             @click="clearSearch"
@@ -125,7 +129,10 @@
             >
               <td class="p-2 text-left">{{ event.eventName }}</td>
               <td class="p-2 text-left">{{ formattedDate(event.date) }}</td>
-              <td class="p-2 text-left">{{ event.address.line1 }}</td>
+              <!-- Used ? in event.address?.line1 in order to catch unreadable erros
+              this is because if an event doesn not have an adress line then it will give you
+              an error because there is no line1 attribute in the address object -->
+              <td class="p-2 text-left">{{ event.address?.line1 }}</td>
             </tr>
           </tbody>
         </table>
@@ -148,7 +155,8 @@ export default {
     };
   },
   mounted() {
-    let apiURL = import.meta.env.VITE_ROOT_API + `/eventdata/`;
+    let apiURL = import.meta.env.VITE_ROOT_API + `/eventData/`;
+    console.log()
     this.queryData = [];
     axios.get(apiURL).then((resp) => {
       this.queryData = resp.data;

@@ -28,8 +28,9 @@ router.get("/", (req, res, next) => {
 
 //GET request that retrives single entry by using the ID of the client
 router.get("/id/:id", (req, res, next) => {
+    orgID = process.env.ORGANIZATION
     primarydata.find(
-        { _id: req.params.id },
+        { _id: req.params.id, orgs: orgID },
         (error, data) => {
             if (error) {
                 return next(error);
@@ -44,10 +45,11 @@ router.get("/id/:id", (req, res, next) => {
 //Ex: '...?firstName=Bob&lastName=&searchBy=name' 
 router.get("/search/", (req, res, next) => {
     let dbQuery = "";
+    orgID = process.env.ORGANIZATION
     if (req.query["searchBy"] === 'name') {
-        dbQuery = { firstName: { $regex: `^${req.query["firstName"]}`, $options: "i" }, lastName: { $regex: `^${req.query["lastName"]}`, $options: "i" } }
+        dbQuery = { orgs: orgID,firstName: { $regex: `^${req.query["firstName"]}`, $options: "i" }, lastName: { $regex: `^${req.query["lastName"]}`, $options: "i" } }
     } else if (req.query["searchBy"] === 'number') {
-        dbQuery = {
+        dbQuery = { orgs: orgID,
             "phoneNumbers.primaryPhone": { $regex: `^${req.query["phoneNumbers.primaryPhone"]}`, $options: "i" }
         }
     };
@@ -66,12 +68,16 @@ router.get("/search/", (req, res, next) => {
 // ----------- POST request --------------------
 //POST request to insert a client into the db
 router.post("/", (req, res, next) => {
+    req.body.orgs = process.env.ORGANIZATION
+    console.log(req.body)
+
     primarydata.create(
         req.body,
         (error, data) => {
             if (error) {
                 return next(error);
             } else {
+
                 res.json(data);
             }
         }
@@ -79,12 +85,15 @@ router.post("/", (req, res, next) => {
     primarydata.createdAt;
     primarydata.updatedAt;
     primarydata.createdAt instanceof Date;
+
+
 });
 
 // ------------------ PUT Requests --------------------------------
 
 //PUT request to update the attributes for the client using the id of the client
 router.put("/updateClient/:id", (req, res, next) => {
+    console.log(req.body)
     primarydata.findOneAndUpdate(
         { _id: req.params.id },
         req.body,
