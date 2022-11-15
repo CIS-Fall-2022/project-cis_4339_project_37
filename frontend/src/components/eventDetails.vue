@@ -42,7 +42,7 @@
                   class="text-red-700"
                   v-for="error of v$.event.date.$errors"
                   :key="error.$uid"
-                >{{ error.$message }}!</p>
+                >Date cannot be before {{ pastDate }}!</p>
               </span>
             </label>
           </div>
@@ -54,15 +54,16 @@
             <label class="block">
               <span class="text-gray-700">Description</span>
               <textarea
+              
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                rows="2"
+                v-model="event.description"
+                rows="3"
               ></textarea>
             </label>
           </div>
 
-          <div></div>
-          <div></div>
-          <div></div>
+  
+    
           <!-- form field -->
           <div class="flex flex-col grid-cols-3">
             <label>Services Offered at Event</label>
@@ -185,10 +186,23 @@
               />
             </label>
           </div>
+                    <!-- form field -->
+                    <div class="flex flex-col">
+            <label class="block">
+              <span class="text-gray-700">State</span>
+              <input
+                type="text"
+                class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                placeholder
+                v-model="event.address.state"
+              />
+            </label>
+          </div>
         </div>
-
+       
         <!-- grid container -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
+          <div></div>
           <div class="flex justify-between mt-10 mr-20">
             <button
               @click="handleEventUpdate"
@@ -255,6 +269,7 @@ export default {
   },
   data() {
     return {
+      pastDate: "",
       attendeeIDs: [],
       attendeeData: [],
       checkedServices: [],
@@ -282,6 +297,7 @@ export default {
       .then((resp) => {
         let data = resp.data[0];
         this.event.eventName = data.eventName;
+        console.log(data.description);
         console.log(data.date);
         this.event.date = DateTime.fromISO(data.date).plus({ days: 1 }).toISODate();
         this.event.description = data.description;
@@ -314,6 +330,7 @@ export default {
     handleEventUpdate() {
       this.event.services = this.checkedServices;
       let apiURL = import.meta.env.VITE_ROOT_API + `/eventdata/${this.id}`;
+      console.log(this.event)
       axios.put(apiURL, this.event).then(() => {
         alert("Update has been saved.");
         this.$router.back().catch((error) => {
@@ -328,10 +345,14 @@ export default {
   },
   // sets validations for the various data properties
   validations() {
+    var today = new Date()
+    var todayISO = (new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)).toISOString()
+    this.pastDate = (today.getMonth()+ 1).toString() + "/" + today.getDate().toString() + "/" +  today.getFullYear().toString() 
+    console.log(todayISO)
     return {
       event: {
         eventName: { required },
-        date: { required },
+        date: { required},
       },
     };
   },

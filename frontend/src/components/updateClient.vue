@@ -95,6 +95,7 @@ export default {
   },
   methods: {
     formattedDate(datetimeDB) {
+      console.log(datetimeDB)
       return DateTime.fromISO(datetimeDB).plus({ days: 1 }).toLocaleString();
     },
     async handleClientUpdate() {
@@ -114,7 +115,26 @@ export default {
     },
     async addToEvent() {
       const isFormCorrect = await this.v$.$validate();
-      if (isFormCorrect) {
+      var curClientEvents = JSON.parse(JSON.stringify(this.clientEvents))
+      var stringEventsChoosen = JSON.parse(JSON.stringify(this.eventsChosen))
+      var eventsList = []
+      var error = true
+      stringEventsChoosen.forEach(choosen => {
+        eventsList.push(choosen.eventName)
+      })
+      curClientEvents.forEach(events => {
+        if (eventsList.includes(events.eventName)){
+          error = false
+        }
+      })
+      if (error){
+        console.log("no copies in events added")
+      }
+      else {
+        alert("Please Remove Duplicate Event from selection");
+      }
+      console.log(JSON.parse(JSON.stringify(this.clientEvents)))
+      if (isFormCorrect && error) {
       this.eventsChosen.forEach((event) => {
         let apiURL =
           import.meta.env.VITE_ROOT_API + `/eventdata/addAttendee/` + event._id;
@@ -128,8 +148,12 @@ export default {
             .then((resp) => {
               let data = resp.data;
               for (let i = 0; i < data.length; i++) {
+                console.log(data[i])
                 this.clientEvents.push({
                   eventName: data[i].eventName,
+                  eventDate: data[i].date,
+
+            
                 });
               }
             });
@@ -382,7 +406,7 @@ export default {
               <tbody class="divide-y divide-gray-300">
                 <tr v-for="event in clientEvents" :key="event._id">
                   <td class="p-2 text-left">{{ event.eventName }}</td>
-                  <td class="p-2 text-left">{{ formattedDate(event.eventDate) }}</td>
+                  <td class="p-2 text-left">{{ formattedDate(event?.eventDate) }}</td>
                 </tr>
               </tbody>
             </table>
@@ -395,6 +419,11 @@ export default {
               v-model="eventsChosen"
               :options="eventData"
               :multiple="true"
+              :close-on-select="true"
+              :clear-on-select="true"
+              :perserve-search="true"
+              :preselect-first="true"
+              track-by="eventName"
               label="eventName"
             ></VueMultiselect>
             <div class="flex justify-between">

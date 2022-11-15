@@ -227,7 +227,9 @@ export default {
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
-              <span class="text-gray-700">Phone Number</span>
+              <span class="text-gray-700">Phone Number (ex: 1112223333)</span>
+              
+    
               <span style="color: #ff0000">*</span>
               <input
                 type="text"
@@ -261,7 +263,7 @@ export default {
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
-              <span class="text-gray-700">Alternative Phone Number</span>
+              <span class="text-gray-700">Alternative Phone Number </span>
               <input
                 type="text"
                 class="
@@ -415,7 +417,7 @@ export default {
           <!-- form field -->
           <div class="flex flex-col">
             <label class="block">
-              <span class="text-gray-700">State</span>
+              <span class="text-gray-700">State (ex: Texas)</span>
               <span style="color: #ff0000">*</span>
               <input
                 type="text"
