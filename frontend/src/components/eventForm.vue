@@ -45,7 +45,7 @@
                   class="text-red-700"
                   v-for="error of v$.event.date.$errors"
                   :key="error.$uid"
-                >{{ error.$message }}!</p>
+                >Date cannot be before {{pastDate}}! </p>
               </span>
             </label>
           </div>
@@ -58,6 +58,7 @@
               <span class="text-gray-700">Description</span>
               <textarea
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                v-model="event.description"
                 rows="3"
               ></textarea>
             </label>
@@ -209,7 +210,7 @@
 </template>
 <script>
 import useVuelidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, alpha } from "@vuelidate/validators";
 import axios from "axios";
 export default {
   setup() {
@@ -218,6 +219,7 @@ export default {
   data() {
     return {
       checkedServices: [],
+      pastDate: "",
       event: {
         eventName: "",
         services: [],
@@ -269,12 +271,21 @@ export default {
       }
     },
   },
+  test(){
+    this.pastDate = Date()
+    
+  },
   // sets validations for the various data properties
   validations() {
+    var today = new Date()
+    var todayISO = (new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)).toISOString()
+    this.pastDate = (today.getMonth()+ 1).toString() + "/" + today.getDate().toString() + "/" +  today.getFullYear().toString() 
+    console.log(todayISO)
     return {
       event: {
         eventName: { required },
-        date: { required },
+        date: { required , minValue: value => value > todayISO},
+      
       },
     };
   },

@@ -95,6 +95,7 @@ export default {
   },
   methods: {
     formattedDate(datetimeDB) {
+      console.log(datetimeDB)
       return DateTime.fromISO(datetimeDB).plus({ days: 1 }).toLocaleString();
     },
     async handleClientUpdate() {
@@ -147,8 +148,12 @@ export default {
             .then((resp) => {
               let data = resp.data;
               for (let i = 0; i < data.length; i++) {
+                console.log(data[i])
                 this.clientEvents.push({
                   eventName: data[i].eventName,
+                  eventDate: data[i].date,
+
+            
                 });
               }
             });
@@ -401,7 +406,7 @@ export default {
               <tbody class="divide-y divide-gray-300">
                 <tr v-for="event in clientEvents" :key="event._id">
                   <td class="p-2 text-left">{{ event.eventName }}</td>
-                  <td class="p-2 text-left">{{ formattedDate(event.eventDate) }}</td>
+                  <td class="p-2 text-left">{{ formattedDate(event?.eventDate) }}</td>
                 </tr>
               </tbody>
             </table>
@@ -414,6 +419,11 @@ export default {
               v-model="eventsChosen"
               :options="eventData"
               :multiple="true"
+              :close-on-select="true"
+              :clear-on-select="true"
+              :perserve-search="true"
+              :preselect-first="true"
+              track-by="eventName"
               label="eventName"
             ></VueMultiselect>
             <div class="flex justify-between">
