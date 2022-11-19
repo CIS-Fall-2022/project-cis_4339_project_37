@@ -315,7 +315,7 @@ export default {
       this.event.services = this.checkedServices;
       let apiURL = import.meta.env.VITE_ROOT_API + `/eventdata/${this.id}`;
       axios.put(apiURL, this.event).then(() => {
-        alert("Update has been saved.");
+        alert("Update has been saveds.");
         this.$router.back().catch((error) => {
           console.log(error);
         });
