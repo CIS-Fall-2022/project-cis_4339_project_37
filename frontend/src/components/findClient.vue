@@ -139,6 +139,7 @@
               <th class="p-4 text-left">Name</th>
               <th class="p-4 text-left">Phone number</th>
               <th class="p-4 text-left">City</th>
+              <button @click.prevent="deleteClient(Client._id)" class="btn btn-danger mx-2">Delete</button>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-300">
@@ -198,6 +199,22 @@ export default {
         this.queryData = resp.data;
       });
     },
+    deleteClient(id){
+      let apiURL = "";
+      let indexOfArrayItem = this.Client.findIndex(i => i._id === id);
+
+      if (window.confirm("Do you really want to delete?")) {
+        apiURL = 
+          import.meta.env.VITE_ROOT_API +
+          `/primarydata/deletePrimary/${id}`;
+
+        axios.delete(apiURL).then(() => {
+            this.Client.splice(indexOfArrayItem, 1);
+          }).catch(error => {
+              console.log(error)
+              console.error("Something went wrong with your request");
+          });
+    },
     clearSearch() {
       //Resets all the variables
       this.searchBy = "";
@@ -214,6 +231,6 @@ export default {
     editClient(clientID) {
       this.$router.push({ name: "updateclient", params: { id: clientID } });
     },
-  },
+  }
 };
 </script>
