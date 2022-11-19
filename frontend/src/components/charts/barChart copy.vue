@@ -6,13 +6,6 @@
       :value="month.value"
     >{{month.label}}</option>
   </select>
-  <div style="width:500px;">
-    <Bar
-      :chart-data="chartData"
-      style="position:relative"
-    />
-
-  </div>
 
 </template>
 
@@ -41,6 +34,7 @@ export default {
     },
     datasets () {
       let datasets = []
+      console.log('data',this.eventsData)
       if (this.datesInMonth.length > 0) {
         datasets = [{
           label: 'event',

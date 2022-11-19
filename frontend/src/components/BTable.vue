@@ -36,7 +36,7 @@ export default {
         let dataColumns = Object.keys(this.rows[0])
         columns = dataColumns
       }
-
+      console.log(columns)
       return columns
     }
   }

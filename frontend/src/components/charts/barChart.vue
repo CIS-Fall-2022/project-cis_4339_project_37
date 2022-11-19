@@ -3,7 +3,7 @@
   <Bar
     :chart-data="chartData"
     :chart-options="chartOptions"
-    style="position:relative"
+    style="position:relative;width:65vw;height:30vw"
   />
 
 </template>
@@ -22,21 +22,23 @@ export default {
       month: null,
       chartOptions: {
         responsive: true,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+      
       }
     }
   },
   props: ['eventsData'],
   computed: {
     chartData () {
+      console.log(this.eventsData,'tts')
       return {
-        labels: this.eventsData.map(e => e.eventName),
+        labels: this.eventsData.map(e => e.EventName),
         datasets: [
           {
             label: 'attendees',
             backgroundColor: '#f87979',
             data: this.eventsData.map((e) => {
-              return e.attendees
+              return e.Attendees
             })
           }
         ]

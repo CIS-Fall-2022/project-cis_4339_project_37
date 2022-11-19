@@ -24,37 +24,44 @@
 import barChart from './charts/barChart.vue'
 import bTable from './BTable.vue'
 import bCard from './BCard.vue'
-import { faker } from '@faker-js/faker';
-import moment from 'moment'
+import axios from 'axios';
 export default {
   components: { barChart, bTable, bCard },
   data () {
     return {
       events: [
-      ]
+      ],
+      queryData: [],
     }
   },
   methods: {
     routePush (routeName) {
       this.$router.push({ name: routeName });
     },
-    createRandomEvent () {
-      return {
-        eventName: faker.internet.userName(),
-        date: moment(faker.date.between('2022-09-01T00:00:00.000Z', '2022-11-30T00:00:00.000Z')).format('YYYY-MM-DD'),
-        description: faker.company.bs(),
-        attendees: faker.random.numeric(2)
-      }
+    async getEventdata() {
+      let apiURL = "";
+      let d;
+      apiURL =
+          import.meta.env.VITE_ROOT_API +
+          `/eventdata/ptmevents`;
+   
+      await axios.get(apiURL).then((resp) => {
+        this.queryData = resp.data
+        console.log(this.queryData,'testss')
+      });
+      this.generateRandomData()
     },
     generateRandomData () {
-      for (let i = 0; i < 100; i++) {
-        let data = { id: i, ...this.createRandomEvent() }
+      console.log(this.queryData,'test')
+      for (let i = 0; i < 5; i++) {
+        let data = { id: i, EventName: this.queryData[i].eventName, Date: this.queryData[i].date, Attendees: this.queryData[i].attendees.length}
         this.events.push(data)
       }
+      console.log(this.events,'evn')
     }
   },
   created () {
-    this.generateRandomData()
+    this.getEventdata()
   }
 };
 </script>
