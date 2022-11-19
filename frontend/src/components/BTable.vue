@@ -1,5 +1,5 @@
 <template>
-  <table class="table-auto border-collapse	">
+  <table class="table-auto border-collapse" style="width:618px">
     <thead class="sticky top-0 bg-red-100">
       <tr>
         <td

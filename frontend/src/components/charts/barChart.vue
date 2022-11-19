@@ -3,7 +3,7 @@
   <Bar
     :chart-data="chartData"
     :chart-options="chartOptions"
-    style="position:relative;width:65vw;height:30vw"
+    style="position:relative;width:55vw;height:30vw"
   />
 
 </template>
@@ -23,6 +23,9 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
+        ticks: {
+  precision:0
+}
       
       }
     }

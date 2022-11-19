@@ -122,7 +122,7 @@ router.get("/ptmevents", (req, res, next) => {
         var today = new Date();
         newDate = new Date(today.getFullYear(), today.getMonth() - 2, 1);
         eventdata.find(
-            { _id: { $in: eventList }, date: { $gte: newDate } }, { eventName: true, attendees: true, date: true },
+            { _id: { $in: eventList }, date: { $gte: newDate } }, { eventName: true, attendees: true, date: true ,description:true},
             (error, data) => {
                 if (error) {
                     return next(error);

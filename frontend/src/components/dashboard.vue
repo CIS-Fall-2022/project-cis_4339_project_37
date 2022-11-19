@@ -1,8 +1,10 @@
 <template>
-  <main class="bg-gray-100">
+  <main class="">
     <div>
-      <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Welcome</h1>
+      <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">Welcome!</h1>
+      <p class="font-bold text-2xl tracking-widest text-center mt-10">Events within last 2 months</p>
     </div>
+    
     <div
       class="flex justify-around gap-x-3 p-5"
       style="height:70vh"
@@ -47,14 +49,14 @@ export default {
    
       await axios.get(apiURL).then((resp) => {
         this.queryData = resp.data
-        console.log(this.queryData,'testss')
+        console.log(this.queryData,'testsdatas')
       });
-      this.generateRandomData()
+      this.generateTableData()
     },
-    generateRandomData () {
+    generateTableData () {
       console.log(this.queryData,'test')
-      for (let i = 0; i < 5; i++) {
-        let data = { id: i, EventName: this.queryData[i].eventName, Date: this.queryData[i].date, Attendees: this.queryData[i].attendees.length}
+      for (let i = 0; i < this.queryData.length - 1; i++) {
+        let data = {EventName: this.queryData[i]?.eventName, Date: (new Date(this.queryData[i]?.date)).toISOString().split('T')[0], Description: this.queryData[i]?.description, Attendees: this.queryData[i]?.attendees?.length}
         this.events.push(data)
       }
       console.log(this.events,'evn')
