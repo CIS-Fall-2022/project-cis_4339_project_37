@@ -139,11 +139,11 @@
               <th class="p-4 text-left">Name</th>
               <th class="p-4 text-left">Phone number</th>
               <th class="p-4 text-left">City</th>
+              <th class="p-4 text-left"></th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-300">
             <tr
-              @click="editClient(client._id)"
               v-for="client in queryData"
               :key="client._id"
             >
@@ -154,6 +154,8 @@
                 {{ client.phoneNumbers.primaryPhone }}
               </td>
               <td class="p-2 text-left">{{ client.address.city }}</td>
+              <button @click="deleteClient(client)" type="submit" class="bg-red-700 text-white rounded">Delete</button>
+              <button @click="editClient(client._id)" type="submit" class="bg-blue-700 text-white rounded">Edit Client</button>
             </tr>
           </tbody>
         </table>
@@ -198,6 +200,23 @@ export default {
         this.queryData = resp.data;
       });
     },
+    deleteClient(id){
+      let apiURL = "";
+      let clientID = id._id
+
+      if (window.confirm("Do you really want to delete?")) {
+        apiURL = 
+          import.meta.env.VITE_ROOT_API +
+          `/primarydata/deletePrimary/${clientID}`;
+
+        axios.delete(apiURL).then(() => {
+          }).catch(error => {
+              console.log(error)
+              console.error("Something went wrong with your request");
+          });
+          location.reload();
+          alert ("Client Deleted!")
+    }},
     clearSearch() {
       //Resets all the variables
       this.searchBy = "";
@@ -214,6 +233,6 @@ export default {
     editClient(clientID) {
       this.$router.push({ name: "updateclient", params: { id: clientID } });
     },
-  },
+  }
 };
 </script>
