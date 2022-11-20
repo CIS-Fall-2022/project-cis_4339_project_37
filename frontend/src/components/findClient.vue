@@ -218,6 +218,8 @@ export default {
               console.log(error)
               console.error("Something went wrong with your request");
           });
+          location.reload();
+          alert ("Client Deleted!")
     }},
     clearSearch() {
       //Resets all the variables
