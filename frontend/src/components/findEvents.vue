@@ -133,8 +133,12 @@
               this is because if an event doesn not have an adress line then it will give you
               an error because there is no line1 attribute in the address object -->
               <td class="p-2 text-left">{{ event.address?.line1 }}</td>
+              <td>
               <button @click="deleteEvent(event)" type="submit" class="bg-red-700 text-white rounded">Delete</button>
+            </td>
+            <td>
               <button @click="editEvent(event._id)" type="submit" class="bg-blue-700 text-white rounded">Edit Event</button>
+            </td>
             </tr>
           </tbody>
         </table>

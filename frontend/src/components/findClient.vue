@@ -140,6 +140,7 @@
               <th class="p-4 text-left">Phone number</th>
               <th class="p-4 text-left">City</th>
               <th class="p-4 text-left"></th>
+              <th class="p-4 text-left"></th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-300">
@@ -154,8 +155,12 @@
                 {{ client.phoneNumbers.primaryPhone }}
               </td>
               <td class="p-2 text-left">{{ client.address.city }}</td>
+              <td>
               <button @click="deleteClient(client)" type="submit" class="bg-red-700 text-white rounded">Delete</button>
+            </td>
+          <td>
               <button @click="editClient(client._id)" type="submit" class="bg-blue-700 text-white rounded">Edit Client</button>
+            </td>
             </tr>
           </tbody>
         </table>
