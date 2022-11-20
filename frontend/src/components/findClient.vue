@@ -139,12 +139,11 @@
               <th class="p-4 text-left">Name</th>
               <th class="p-4 text-left">Phone number</th>
               <th class="p-4 text-left">City</th>
-              <button @click.prevent="deleteClient(Client._id)" class="btn btn-danger mx-2">Delete</button>
+              <th class="p-4 text-left"></th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-300">
             <tr
-              @click="editClient(client._id)"
               v-for="client in queryData"
               :key="client._id"
             >
@@ -155,6 +154,12 @@
                 {{ client.phoneNumbers.primaryPhone }}
               </td>
               <td class="p-2 text-left">{{ client.address.city }}</td>
+              <button
+
+              @click="deleteClient(client)" type="submit" class="bg-red-700 text-white rounded">Delete</button>
+              <button
+
+              @click="editClient(client._id)" type="submit" class="bg-blue-700 text-white rounded">Edit Client</button>
             </tr>
           </tbody>
         </table>
@@ -201,20 +206,19 @@ export default {
     },
     deleteClient(id){
       let apiURL = "";
-      let indexOfArrayItem = this.Client.findIndex(i => i._id === id);
+      let clientID = id._id
 
       if (window.confirm("Do you really want to delete?")) {
         apiURL = 
           import.meta.env.VITE_ROOT_API +
-          `/primarydata/deletePrimary/${id}`;
+          `/primarydata/deletePrimary/${clientID}`;
 
         axios.delete(apiURL).then(() => {
-            this.Client.splice(indexOfArrayItem, 1);
           }).catch(error => {
               console.log(error)
               console.error("Something went wrong with your request");
           });
-    },
+    }},
     clearSearch() {
       //Resets all the variables
       this.searchBy = "";
