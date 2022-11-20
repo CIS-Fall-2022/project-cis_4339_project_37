@@ -154,12 +154,8 @@
                 {{ client.phoneNumbers.primaryPhone }}
               </td>
               <td class="p-2 text-left">{{ client.address.city }}</td>
-              <button
-
-              @click="deleteClient(client)" type="submit" class="bg-red-700 text-white rounded">Delete</button>
-              <button
-
-              @click="editClient(client._id)" type="submit" class="bg-blue-700 text-white rounded">Edit Client</button>
+              <button @click="deleteClient(client)" type="submit" class="bg-red-700 text-white rounded">Delete</button>
+              <button @click="editClient(client._id)" type="submit" class="bg-blue-700 text-white rounded">Edit Client</button>
             </tr>
           </tbody>
         </table>

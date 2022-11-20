@@ -133,6 +133,8 @@
               this is because if an event doesn not have an adress line then it will give you
               an error because there is no line1 attribute in the address object -->
               <td class="p-2 text-left">{{ event.address?.line1 }}</td>
+              <button @click="deleteEvent(event)" type="submit" class="bg-red-700 text-white rounded">Delete</button>
+              <button @click="editEvent(event._id)" type="submit" class="bg-blue-700 text-white rounded">Edit Event</button>
             </tr>
           </tbody>
         </table>
@@ -182,6 +184,23 @@ export default {
         this.queryData = resp.data;
       });
     },
+    deleteEvent(id){
+      let apiURL = "";
+      let eventID = id._id
+
+      if (window.confirm("Do you really want to delete?")) {
+        apiURL = 
+          import.meta.env.VITE_ROOT_API +
+          `/eventdata/deleteEvent/${eventID}`;
+
+        axios.delete(apiURL).then(() => {
+          }).catch(error => {
+              console.log(error)
+              console.error("Something went wrong with your request");
+          });
+          location.reload();
+          alert ("Event Deleted!")
+    }},
     clearSearch() {
       //Resets all the variables
       this.searchBy = "";
