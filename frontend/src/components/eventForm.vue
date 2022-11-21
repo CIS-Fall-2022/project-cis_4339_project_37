@@ -45,7 +45,7 @@
                   class="text-red-700"
                   v-for="error of v$.event.date.$errors"
                   :key="error.$uid"
-                >Date cannot be before {{pastDate}}! </p>
+                >{{error.$message}} </p>
               </span>
             </label>
           </div>
@@ -277,14 +277,11 @@ export default {
   },
   // sets validations for the various data properties
   validations() {
-    var today = new Date()
-    var todayISO = (new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)).toISOString()
-    this.pastDate = (today.getMonth()+ 1).toString() + "/" + today.getDate().toString() + "/" +  today.getFullYear().toString() 
-    console.log(todayISO)
+ 
     return {
       event: {
         eventName: { required },
-        date: { required , minValue: value => value > todayISO},
+        date: { required},
       
       },
     };
