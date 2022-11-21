@@ -10,3 +10,21 @@ Environment Variables Setup:
 
 
 Link for the API documentation: https://documenter.getpostman.com/view/15143721/2s83zfRQvx
+
+Link for Frontend deployment: https://master--cis4339-project-37.netlify.app/
+
+Team Members: 
+Mauricio Corado
+    branches:
+        - deleteFunctions
+        - deleteButton-FE
+Mohammad Irfan
+    branches:
+        - dashboarddata
+        - graphTable branch
+            - needed to create a new branch called graphTableCommitFix in order to merge commits into the main branch
+Alex Arredondo
+    branches: 
+        - errorHandling
+        - orgAPI, primaryAPI, eventAPI
+        - orgNameShow
