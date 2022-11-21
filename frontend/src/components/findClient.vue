@@ -205,22 +205,24 @@ export default {
         this.queryData = resp.data;
       });
     },
+    // this is the method that connects to the backend api in order to delete a client by using their ID
     deleteClient(id){
-      let apiURL = "";
+      let apiURL = "";  // empty variable that will hold the api url from the backend
       let clientID = id._id
 
-      if (window.confirm("Do you really want to delete?")) {
+      // if statement that deletes the client based on their ID
+      if (window.confirm("Do you really want to delete?")) {  // confirms if the user wants to delete
         apiURL = 
           import.meta.env.VITE_ROOT_API +
-          `/primarydata/deletePrimary/${clientID}`;
+          `/primarydata/deletePrimary/${clientID}`;  // path of the backend api
 
-        axios.delete(apiURL).then(() => {
+        axios.delete(apiURL).then(() => {  // deletion of the client using axios
           }).catch(error => {
               console.log(error)
               console.error("Something went wrong with your request");
           });
           location.reload();
-          alert ("Client Deleted!")
+          alert ("Client Deleted!")  // message that pops up that lets the user know deletion worked
     }},
     clearSearch() {
       //Resets all the variables

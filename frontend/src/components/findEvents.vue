@@ -133,10 +133,10 @@
               this is because if an event doesn not have an adress line then it will give you
               an error because there is no line1 attribute in the address object -->
               <td class="p-2 text-left">{{ event.address?.line1 }}</td>
-              <td>
+              <td> 
               <button @click="deleteEvent(event)" type="submit" class="bg-red-700 text-white rounded">Delete</button>
             </td>
-            <td>
+            <td> <!-- below and above we have the buttons created. on at click is how we call the corresponding method-->
               <button @click="editEvent(event._id)" type="submit" class="bg-blue-700 text-white rounded">Edit Event</button>
             </td>
             </tr>
@@ -188,22 +188,23 @@ export default {
         this.queryData = resp.data;
       });
     },
+    // method used to delete an event based on it's ID
     deleteEvent(id){
-      let apiURL = "";
+      let apiURL = "";  // empty variable that will hold the api url
       let eventID = id._id
 
-      if (window.confirm("Do you really want to delete?")) {
+      if (window.confirm("Do you really want to delete?")) {  // just like in clients, confirming is essential
         apiURL = 
           import.meta.env.VITE_ROOT_API +
-          `/eventdata/deleteEvent/${eventID}`;
+          `/eventdata/deleteEvent/${eventID}`;  // path for the api in the backend
 
-        axios.delete(apiURL).then(() => {
+        axios.delete(apiURL).then(() => {  // deletion of the event
           }).catch(error => {
               console.log(error)
               console.error("Something went wrong with your request");
           });
           location.reload();
-          alert ("Event Deleted!")
+          alert ("Event Deleted!")  // alert message to confirm deltetion
     }},
     clearSearch() {
       //Resets all the variables
